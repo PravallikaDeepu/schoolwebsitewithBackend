@@ -48,8 +48,12 @@
 const Express = require("express")
 const app = Express()
 const db = require("mysql2/promise")
+const CORS = require("cors")
 
 app.use(Express.urlencoded())
+app.use(Express.json());  // Add this line to parse JSON request bodies
+
+app.use(CORS())
 app.set("view engine","ejs")
 app.use(Express.static("public"))
 require("dotenv").config(); // Add at the top
@@ -62,26 +66,29 @@ const connectedData = db.createPool({
     database: process.env.DB_DATABASE
 })
 
-app.get("/admission/form", function(req,res)
-{
-  res.render("applicationForm.ejs")
-})
 
-app.post("/admission/form", async function(req,res)
-{
-    const myName = req.body.myName;
-    const myEmail = req.body.myEmail;
-    const myNumber = req.body.myNumber;
-    const myCity = req.body.myCity;
-    const myFather = req.body.myFatherName
-    
-    const details = [myName, myEmail, myNumber, myCity, myFather]
-    console.log(details)
 
-    await connectedData.query("insert into admissions(studentName,studentEmail,studentPhoneNo,studentCity,studentFather) values(?)", [details])
+app.post("/admission/form", async function(req, res) {
+  console.log(req.body,"Hi");
+  const firstName = req.body.myFirst;
+  const lastName = req.body.myLast;
+  const myEmail = req.body.myEmail;
+  const myFather = req.body.myFather;
+  const phoneNo = req.body.phone;
+  const myGender = req.body.myGender;
+  const myPercentage = req.body.myPercentage;
+  const myClass = req.body.myClass;
+  
 
-    res.render("Home.ejs")
-})
+  const rawDob = req.body.myDob; 
+
+  const details = [firstName,lastName,myEmail,myFather,phoneNo,rawDob,myPercentage,myGender,myClass]
+
+  await connectedData.query("insert into admissions(studentFirstName,studentLastName,studentEmail,studentFather,studentPhoneno,studentDob,studentPercentage,studentGender,studentClass) values(?)", [details])
+  
+  res.json({message: "Your details saved Succesffully!"})
+});
+
 
 app.post("/contact", async function(req,res)
 {
@@ -94,6 +101,7 @@ app.post("/contact", async function(req,res)
 
   await connectedData.query("insert into contact(contactName,contactEmail,contactMessage) values(?)",[details])
 
+  res.json({message: "Contact form submitted Successfully!💐💐💐"})
  
 })
 app.listen("4001")
