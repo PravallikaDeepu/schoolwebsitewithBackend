@@ -66,7 +66,10 @@ const connectedData = db.createPool({
     database: process.env.DB_DATABASE
 })
 
-
+app.get("/", function(req,res)
+{
+  res.render("Home.ejs")
+})
 
 app.post("/admission/form", async function(req, res) {
   console.log(req.body,"Hi");
