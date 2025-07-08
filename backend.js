@@ -71,40 +71,62 @@ app.get("/", function(req,res)
   res.render("Home.ejs")
 })
 
-app.post("/admission/form", async function(req, res) {
-  console.log(req.body,"Hi");
-  const firstName = req.body.myFirst;
-  const lastName = req.body.myLast;
-  const myEmail = req.body.myEmail;
-  const myFather = req.body.myFather;
-  const phoneNo = req.body.phone;
-  const myGender = req.body.myGender;
-  const myPercentage = req.body.myPercentage;
-  const myClass = req.body.myClass;
-  
+app.post("/admission/form", async function (req, res) {
+  try {
+    console.log(req.body, "Hi");
 
-  const rawDob = req.body.myDob; 
+    const firstName = req.body.myFirst;
+    const lastName = req.body.myLast;
+    const myEmail = req.body.myEmail;
+    const myFather = req.body.myFather;
+    const phoneNo = req.body.phone;
+    const myGender = req.body.myGender;
+    const myPercentage = req.body.myPercentage;
+    const myClass = req.body.myClass;
+    const rawDob = req.body.myDob;
 
-  const details = [firstName,lastName,myEmail,myFather,phoneNo,rawDob,myPercentage,myGender,myClass]
+    const details = [
+      firstName,
+      lastName,
+      myEmail,
+      myFather,
+      phoneNo,
+      rawDob,
+      myPercentage,
+      myGender,
+      myClass
+    ];
 
-  await connectedData.query("insert into admissions(studentFirstName,studentLastName,studentEmail,studentFather,studentPhoneno,studentDob,studentPercentage,studentGender,studentClass) values(?)", [details])
-  
-  res.json({message: "Your details saved Succesffully!"})
+    await connectedData.query(
+      "INSERT INTO admissions(studentFirstName, studentLastName, studentEmail, studentFather, studentPhoneno, studentDob, studentPercentage, studentGender, studentClass) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+      details
+    );
+
+    res.json({ message: "Your details saved successfully!" });
+
+  } catch (error) {
+    console.error("Insert error:", error);
+    res.status(500).json({ message: "Failed to save form." });
+  }
 });
 
 
-app.post("/contact", async function(req,res)
-{
-  console.log(req.body)
-  const myName = req.body.myName;
-  const myEmail = req.body.myEmail;
-  const myMessage = req.body.myMessage
+app.post("/contact", async function (req, res) {
+  try {
+    console.log(req.body);
 
-  const details = [myName, myEmail, myMessage]
+    const { myName, myEmail, myMessage } = req.body;
+    const details = [myName, myEmail, myMessage];
 
-  await connectedData.query("insert into contact(contactName,contactEmail,contactMessage) values(?)",[details])
+    await connectedData.query(
+      "INSERT INTO contact(contactName, contactEmail, contactMessage) VALUES (?, ?, ?)",
+      details
+    );
 
-  res.json({message: "Contact form submitted Successfully!💐💐💐"})
- 
-})
+    res.json({ message: "Contact form submitted successfully! 💐💐💐" });
+  } catch (error) {
+    console.error("Contact insert error:", error);
+    res.status(500).json({ message: "Failed to submit contact form." });
+  }
+});
 app.listen("4001")
