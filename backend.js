@@ -49,7 +49,7 @@ const Express = require("express")
 const app = Express()
 const db = require("mysql2/promise")
 const CORS = require("cors")
-const PORT = process.env.PORT
+const PORT = process.env.PORT || 4001
 app.use(Express.urlencoded())
 app.use(Express.json());  // Add this line to parse JSON request bodies
 
