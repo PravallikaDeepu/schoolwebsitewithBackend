@@ -49,7 +49,7 @@ const Express = require("express")
 const app = Express()
 const db = require("mysql2/promise")
 const CORS = require("cors")
-
+const PORT = process.env.PORT
 app.use(Express.urlencoded())
 app.use(Express.json());  // Add this line to parse JSON request bodies
 
@@ -129,4 +129,9 @@ app.post("/contact", async function (req, res) {
     res.status(500).json({ message: "Failed to submit contact form." });
   }
 });
-app.listen("4001")
+
+app.listen(PORT, ()=>
+{
+  console.log("Server running at Port No 4001")
+})
+
