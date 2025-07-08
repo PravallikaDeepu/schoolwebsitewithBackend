@@ -8,7 +8,8 @@
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10"
   },
-  "scripts": {
-    "server": "nodemon backend.js"
-  }
+"scripts": {
+  "start": "node backend.js",
+  "server": "nodemon backend.js"
+}
 }
